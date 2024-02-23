@@ -1,16 +1,30 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  firstName: string;
+  @Column({ unique: true })
+  username: string;
 
-  @Column()
-  lastName: string;
+  @Column({ unique: true })
+  email: string;
 
   @Column({ default: true })
-  isActive: boolean;
+  password: string;
+
+  @Column({
+    default:
+      'https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg',
+  })
+  profilePicture: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }
