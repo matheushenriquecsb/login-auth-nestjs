@@ -7,13 +7,15 @@ import { LoginAuthDto } from './dto/login-auth.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('/sign-up')
-  registerUser(@Body() registerAuthDto: RegisterAuthDto) {
+  @Post('/signup')
+  registerUser(@Body() registerAuthDto: RegisterAuthDto): Promise<void> {
     return this.authService.registerUser(registerAuthDto);
   }
 
-  @Post('/sign-in')
-  loginUser(@Body() loginAuthDto: LoginAuthDto) {
+  @Post('/signin')
+  loginUser(
+    @Body() loginAuthDto: LoginAuthDto,
+  ): Promise<{ access_token: string }> {
     return this.authService.loginUser(loginAuthDto);
   }
 
