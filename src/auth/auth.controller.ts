@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
-import { RegisterRequestDto } from './dto/register-request.dto';
-import { LoginRequestDto } from './dto/login-request.dto';
 import { GoogleAuthDto } from './dto/google-auth.dto';
+import { LoginRequestDto } from './dto/login-request.dto';
+import { LoginResponseDto } from './dto/login-response.dto';
+import { RegisterRequestDto } from './dto/register-request.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -14,7 +16,7 @@ export class AuthController {
   }
 
   @Post('/signin')
-  loginUser(@Body() loginAuthDto: LoginRequestDto) {
+  loginUser(@Body() loginAuthDto: LoginRequestDto): Promise<LoginResponseDto> {
     return this.authService.loginUser(loginAuthDto);
   }
 
@@ -23,8 +25,8 @@ export class AuthController {
     return this.authService.loginGoogleAuth(googleAuthDto);
   }
 
-  @Get('/sign-out')
-  logout() {
-    return;
+  @Get('/signout')
+  signOut(@Res() res: Response) {
+    return this.authService.signOut(res);
   }
 }

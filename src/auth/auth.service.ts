@@ -2,17 +2,17 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
-  Res,
 } from '@nestjs/common';
-import { RegisterRequestDto } from './dto/register-request.dto';
-import * as bcrypt from 'bcrypt';
-import { LoginRequestDto } from './dto/login-request.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UserEntity } from 'src/users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
+
+import { UserEntity } from '../users/entities/user.entity';
 import { GoogleAuthDto } from './dto/google-auth.dto';
+import { LoginRequestDto } from './dto/login-request.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
+import { RegisterRequestDto } from './dto/register-request.dto';
 import { Response } from 'express';
 
 @Injectable()
@@ -36,7 +36,7 @@ export class AuthService {
     }
   }
 
-  async loginUser(loginAuthDto: LoginRequestDto) {
+  async loginUser(loginAuthDto: LoginRequestDto): Promise<LoginResponseDto> {
     const user = await this.userRepository.findOneBy({
       email: loginAuthDto.email,
     });
@@ -79,10 +79,12 @@ export class AuthService {
         Math.random().toString(36).slice(-8);
 
       const hashedPassword = bcrypt.hashSync(generatedPassword, 10);
-
-      console.log(hashedPassword);
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  signOut(res: Response) {
+    res.clearCookie('access_token').status(200).json('Signout success!');
   }
 }

@@ -1,8 +1,15 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class RegisterRequestDto {
   @IsString()
-  @MinLength(8)
+  @MinLength(6)
+  @MaxLength(8)
   @IsNotEmpty()
   username: string;
 
