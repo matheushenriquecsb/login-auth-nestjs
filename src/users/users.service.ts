@@ -18,4 +18,12 @@ export class UsersService {
       profilePicture: updateUserDto.profilePicture,
     });
   }
+
+  async deleteUser(id: string) {
+    try {
+      await this.userRepository.delete(id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
