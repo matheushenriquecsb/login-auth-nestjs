@@ -1,5 +1,6 @@
 export class LoginResponseDto {
-  access_token: string;
+  id: number;
+  token: string;
   profilePicture: string;
   email: string;
   username: string;
