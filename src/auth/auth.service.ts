@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  Res,
 } from '@nestjs/common';
 import { RegisterRequestDto } from './dto/register-request.dto';
 import * as bcrypt from 'bcrypt';
@@ -12,6 +13,7 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { GoogleAuthDto } from './dto/google-auth.dto';
 import { LoginResponseDto } from './dto/login-response.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +36,7 @@ export class AuthService {
     }
   }
 
-  async loginUser(loginAuthDto: LoginRequestDto): Promise<LoginResponseDto> {
+  async loginUser(loginAuthDto: LoginRequestDto) {
     const user = await this.userRepository.findOneBy({
       email: loginAuthDto.email,
     });
@@ -48,13 +50,14 @@ export class AuthService {
 
     if (!validPassword) throw new BadRequestException('Wrong Credentials');
 
-    const payload = { id: user.id };
+    const token = this.jwtService.sign({ sub: user.id });
 
     return {
-      access_token: await this.jwtService.signAsync(payload),
-      profilePicture: user.profilePicture,
-      email: user.email,
+      token,
+      id: user.id,
       username: user.username,
+      email: user.email,
+      profilePicture: user.profilePicture,
     };
   }
 
